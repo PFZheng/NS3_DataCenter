@@ -8,7 +8,7 @@ DCSwitch(dc-switch.h/cc): switch.
 
 DCHost(dc-host.h/cc): host.
 
-DCVm(dc-vm.h/cc): virtual machines.
+DCVm(dc-vm.h/cc): virtual machine.
 
 DCTenant(dc-tenant.h/cc): tenant.
 
@@ -18,7 +18,7 @@ DCTenant(dc-tenant.h/cc): tenant.
 
 Q: How to use it?
 
-A: Put it in <NS-3 directory>/src/datacenter.
+A: Put it in "NS-3 directory"/src/datacenter.
 
 
 Q: Which version of NS-3 it support?
