@@ -1,0 +1,58 @@
+#设置helper的factory类
+SetFactory    bridgeForward    ns3::DCBridgeStaticForward
+SetFactory    pointForward     ns3::DCPointStaticForward
+SetFactory    switchQue    ns3::DropTailQueue
+SetFactory    hostQue    ns3::DropTailQueue
+SetFactory    vmQue    ns3::DropTailQueue
+
+#关闭Arp
+SetFactoryAttribute    bridge    EnableArp    bool    false
+SetFactoryAttribute    point    EnableArp    bool    false
+
+#创建level 1级交换机，1个，名称为"S1"
+CreateSwitch    S0    -
+
+#链路性能
+SetLink    10Gbps    10ms
+
+#创建level 2级交换机，2，名称为S2-0和S2-1
+CreateSwitch    S0    S0    2
+
+#创建level 3级交换机
+CreateSwitch    S00    S00    2
+CreateSwitch    S01    S01    2
+
+#链路性能
+SetLink    1Gbps    10ms
+
+#创建物理主机
+CreateHost    S000/H    S000    2
+CreateHost    S001/H    S001    2
+CreateHost    S010/H    S010    2
+CreateHost    S011/H    S011    2
+
+#租户1
+CreateVm    T1/S000/H0/VM    S000/H0    50Mbps    100Mbps    EXPLICIT    1
+CreateVm    T1/S010/H0/VM    S010/H0    50Mbps    100Mbps    EXPLICIT    1
+CreateTenant    T1    10.0.1.0    255.255.255.0
+AssignAddress    T1    T1
+
+#租户1的应用
+CreateAppFactory    SEND    ns3::BulkSendApplication
+CreateAppFactory    RECV    ns3::PacketSink
+SetAppFactoryAttri    SEND    Protocol    STRING    ns3::TcpSocketFactory
+SetAppFactoryAttri    SEND    SendSize    UINT    65536
+SetAppFactoryAttri    RECV    Protocol    STRING    ns3::TcpSocketFactory
+AddSendApp    T1/SEND    T1/S000/H0/VM    T1/S010/H0/VM    Remote    8888
+AddRecvApp    T1/RECV    T1/S010/H0/VM    Local    8888
+AppRunDuration    T1    1s    20s
+
+#租户2
+CreateVm    T2/S000/H0/VM    S000/H0    100Mbps    200Mbps    EXPLICIT    1
+CreateVm    T2/S010/H0/VM    S010/H0    100Mbps    200Mbps    EXPLICIT    1
+CreateTenant    T2    10.0.2.0    255.255.255.0
+AssignAddress    T2    T2
+AddSendApp    T2/SEND    T2/S000/H0/VM    T2/S010/H0/VM    Remote    8888
+AddRecvApp    T2/RECV    T2/S010/H0/VM    Local    8888
+AppRunDuration    T2    1s    20s
+

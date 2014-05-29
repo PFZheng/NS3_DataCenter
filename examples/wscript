@@ -1,0 +1,13 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    obj = bld.create_ns3_program('dc-example', ['datacenter'])
+    obj.source = 'dc-example.cc'
+
+    obj = bld.create_ns3_program('dc-example-static', ['datacenter'])
+    obj.source = 'dc-example-static-forward.cc'
+
+    obj = bld.create_ns3_program('dc-tc-my', ['datacenter'])
+    obj.source = ['option-parse.cc','dc-tc-my.cc']
+
+
